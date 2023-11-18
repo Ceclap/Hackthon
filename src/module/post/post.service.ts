@@ -4,6 +4,7 @@ import {Repository} from "typeorm";
 import {Post} from "@core/database/entity/post.entity";
 import {createPost} from "@common/dto/createPost.dto";
 import {Like} from "@core/database/entity/like.entity";
+import {PageOptionsDto} from "@common/dto/pagination.dto";
 
 @Injectable()
 export class PostService {
@@ -60,5 +61,17 @@ export class PostService {
         return {
             message: "success"
         }
+    }
+    async getPosts(pagination: PageOptionsDto){
+        const posts = await this.postRepository
+            .find({
+                take: pagination.take,
+                skip: pagination.skip,
+            })
+            .catch((err) => {
+                console.error(err);
+                throw new HttpException('Error downloading data from DB',500);
+            });
+        return posts
     }
 }

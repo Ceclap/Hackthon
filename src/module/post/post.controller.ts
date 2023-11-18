@@ -1,9 +1,10 @@
-import {Body, Controller, Param, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Query, UseGuards} from '@nestjs/common';
 import {ApiCookieAuth, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {PostService} from "./post.service";
 import {createPost} from "@common/dto/createPost.dto";
 import {AuthGuard} from "@common/guards/auth.guard";
 import {Client} from "@common/decorators/client.decorator";
+import {PageOptionsDto} from "@common/dto/pagination.dto";
 
 @ApiTags('post')
 @Controller('post')
@@ -52,5 +53,10 @@ export class PostController {
     async dislike(@Param() id: {id:string},@Client() userId: { id:string })
     {
         return this.postService.dislike(id, userId)
+    }
+
+    @Get()
+    async getPosts(@Query() data: PageOptionsDto){
+        return this.postService.getPosts(data)
     }
 }

@@ -1,5 +1,7 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Auth} from "@core/database/entity/auth.entity";
+import {Dislike} from "@core/database/entity/dislike.entity";
+import {Like} from "@core/database/entity/like.entity";
 
 @Entity()
 export class Post {
@@ -16,13 +18,13 @@ export class Post {
     @Column()
     text!: string;
 
-    @Column({default: 0})
-    like!: number;
-
-    @Column({default: 0})
-    dislike!: number;
-
     @ManyToOne(() => Auth, (user) => user.id)
     @JoinColumn({ name: 'author' })
     user!: Auth;
+
+    @OneToMany(()=>Dislike, (dislike)=>dislike.postId)
+    dislike!: Dislike[]
+
+    @OneToMany(()=>Like, (like)=>like.postId)
+    like!: Like[]
 }

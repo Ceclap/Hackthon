@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Post} from "@core/database/entity/post.entity";
 
 @Entity()
 export class Like {
@@ -7,6 +8,10 @@ export class Like {
 
     @Column()
     userId!: string;
+
+    @ManyToOne(() => Post, (post) => post.id)
+    @JoinColumn({ name: 'postId' })
+    post!: string;
 
     @Column()
     postId!: string;

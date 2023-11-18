@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Post} from "@core/database/entity/post.entity";
 
 @Entity()
 export class Auth{
@@ -13,7 +14,7 @@ export class Auth{
   username!: string;
 
   @Column()
-  idnp!: number;
+  idnp!: string;
 
   @Column()
   password!: string;
@@ -23,5 +24,8 @@ export class Auth{
 
   @Column({ default: false })
   confirmed!: boolean;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts!: Post[]
 
 }

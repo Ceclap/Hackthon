@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   async register(data: RegisterDto) {
-    const { email, password, username } = data;
+    const { email, password, username, idnp } = data;
 
     const userExist = await this.authRepository.findOne({
       where: { email },
@@ -37,7 +37,8 @@ export class AuthService {
     const user = await this.authRepository.save({
       email,
       password: hash,
-      username
+      username,
+      idnp
     })
 
     const access_token = this.jwtService.sign({ id: user.id }, {
@@ -125,8 +126,8 @@ export class AuthService {
   }
 
   async me(id: {id: string}){
-    console.log(id);
     const user = await this.authRepository.findOne({
+      relations: {posts: true},
       where:id
     })
     if(!user)
@@ -138,6 +139,7 @@ export class AuthService {
         email: user.email,
         username: user.username,
         photo: user.photo,
+        posts: user.posts
       }
   }
 

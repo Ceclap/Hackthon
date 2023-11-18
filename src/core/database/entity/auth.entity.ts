@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Task } from "@core/database/entity/task.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Auth{
@@ -14,13 +13,13 @@ export class Auth{
   username!: string;
 
   @Column()
+  idnp!: number;
+
+  @Column()
   password!: string;
 
   @Column({ default: null })
   photo!: string;
-
-  @OneToMany(() => Task, (task) => task.user)
-  tasks!: Task[];
 
   @Column({ default: false })
   confirmed!: boolean;

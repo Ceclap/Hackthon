@@ -10,7 +10,6 @@ import process from "process";
 import { HealthModule } from "@core/health/health.module";
 import { CookieModule } from './module/cookie/cookie.module';
 import { ImageModule } from "./module/image/image.module";
-import { TaskModule } from "./module/task/task.module";
 
 @Module({
   imports: [
@@ -31,7 +30,6 @@ import { TaskModule } from "./module/task/task.module";
     AuthModule,
     CookieModule,
     ImageModule,
-    TaskModule,
   ],
   providers: [
     {

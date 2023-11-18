@@ -16,18 +16,18 @@ export class ImageService {
     @InjectRepository(Auth)
     private readonly authRepository: Repository<Auth>,
   ) {
-     this.initializeBucket()
-  }
-  async initializeBucket(){
-    const bucketExists = await this.minioClient.bucketExists(this.bucketName);
-    if (!bucketExists) {
-      await this.minioClient.makeBucket(this.bucketName).catch((error) => {
-        console.error(`Error creating bucket '${this.bucketName}': ${error}`);
-      });
-    } else {
-      console.log(`Bucket '${this.bucketName}' already exists.`);
+    //    this.initializeBucket()
     }
-  }
+  // async initializeBucket(){
+  //   const bucketExists = await this.minioClient.bucketExists(this.bucketName);
+  //   if (!bucketExists) {
+  //     await this.minioClient.makeBucket(this.bucketName).catch((error) => {
+  //       console.error(`Error creating bucket '${this.bucketName}': ${error}`);
+  //     });
+  //   } else {
+  //     console.log(`Bucket '${this.bucketName}' already exists.`);
+  //   }
+  // }
 
     async import(file: Express.Multer.File, id: {id: string }) {
       const user = await this.authRepository.findOneOrFail({ where: id })

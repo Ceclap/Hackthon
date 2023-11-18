@@ -127,7 +127,6 @@ export class AuthService {
   async me(id: {id: string}){
     console.log(id);
     const user = await this.authRepository.findOne({
-      relations: { tasks: true },
       where:id
     })
     if(!user)
@@ -139,7 +138,6 @@ export class AuthService {
         email: user.email,
         username: user.username,
         photo: user.photo,
-        tasks: user.tasks
       }
   }
 

@@ -3,6 +3,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {Post} from "@core/database/entity/post.entity";
 import {createPost} from "@common/dto/createPost.dto";
+import {Like} from "@core/database/entity/like.entity";
 
 @Injectable()
 export class PostService {
@@ -10,6 +11,8 @@ export class PostService {
     constructor(
         @InjectRepository(Post)
         private readonly postRepository: Repository<Post>,
+        @InjectRepository(Like)
+        private readonly likeRepository: Repository<Like>,
     ) {
     }
 
@@ -22,25 +25,38 @@ export class PostService {
         }
     }
 
-    async like(id: {id: string}){
+    async like(id: {id: string}, userId: {id: string}){
         const post = await this.postRepository.findOne({where: id})
         if(!post)
         {
             throw new HttpException('Null Post', 404)
         }
-        await this.postRepository.update(id, {like: ++post.like} )
+        const like = await this.likeRepository.findOne({where: {userId: userId.id, postId: id.id}})
+        if(like){
+            throw new HttpException('Conflict', 409)
+        }
+        await this.likeRepository.save({
+            userId:userId.id,
+            postId: post.id
+        })
         return {
             message: "success"
         }
     }
-    async dislike(id: {id: string}){
+    async dislike(id: {id: string}, userId: {id:string}){
         const post = await this.postRepository.findOne({where: id})
         if(!post)
         {
             throw new HttpException('Null Post', 404)
         }
-        console.log(post.dislike)
-        await this.postRepository.update(id, {dislike: ++post.dislike} )
+        const like = await this.likeRepository.findOne({where: {userId: userId.id, postId: id.id}})
+        if(like){
+            throw new HttpException('Conflict', 409)
+        }
+        await this.likeRepository.save({
+            userId:userId.id,
+            postId: post.id
+        })
         return {
             message: "success"
         }

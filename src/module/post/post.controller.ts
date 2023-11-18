@@ -1,7 +1,9 @@
-import {Body, Controller, Param, Post} from '@nestjs/common';
-import {ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {Body, Controller, Param, Post, UseGuards} from '@nestjs/common';
+import {ApiCookieAuth, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {PostService} from "./post.service";
 import {createPost} from "@common/dto/createPost.dto";
+import {AuthGuard} from "@common/guards/auth.guard";
+import {Client} from "@common/decorators/client.decorator";
 
 @ApiTags('post')
 @Controller('post')
@@ -33,19 +35,22 @@ export class PostController {
         type: String,
         description: 'UUID of the Post',
     })
+    @ApiCookieAuth()
+    @UseGuards(AuthGuard)
     @Post('like/:id')
-    async like(@Param() id: {id:string})
+    async like(@Param() id: {id:string}, @Client() userId: { id:string })
     {
-        return this.postService.like(id)
+        return this.postService.like(id,userId)
     }
     @ApiParam({
         name: 'id',
         type: String,
         description: 'UUID of the Post',
     })
+    @UseGuards(AuthGuard)
     @Post('dislike/:id')
-    async dislike(@Param() id: {id:string})
+    async dislike(@Param() id: {id:string},@Client() userId: { id:string })
     {
-        return this.postService.like(id)
+        return this.postService.dislike(id, userId)
     }
 }

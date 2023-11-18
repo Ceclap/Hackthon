@@ -74,4 +74,23 @@ export class PostService {
             });
         return posts
     }
+    async getPost(pagination: PageOptionsDto, id: {id:string}) {
+        const posts = await this.postRepository
+            .find({
+                take: pagination.take,
+                skip: pagination.skip,
+                where: {author: id.id}
+            })
+            .catch((err) => {
+                console.error(err);
+                throw new HttpException('Error downloading data from DB',500);
+            });
+        return posts
+    }
+    async deletePost(id: { id: string}){
+        await this.postRepository.delete(id)
+        return {
+            messagess: 'success'
+        }
+    }
 }

@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Query, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Query, UseGuards} from '@nestjs/common';
 import {ApiCookieAuth, ApiParam, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {PostService} from "./post.service";
 import {createPost} from "@common/dto/createPost.dto";
@@ -55,8 +55,26 @@ export class PostController {
         return this.postService.dislike(id, userId)
     }
 
-    @Get()
+    @Get('all')
     async getPosts(@Query() data: PageOptionsDto){
         return this.postService.getPosts(data)
     }
+
+    @UseGuards(AuthGuard)
+    @Get()
+    async getPost(@Query() data: PageOptionsDto, @Client() id: {id: string}){
+        return this.postService.getPost(data, id)
+    }
+
+    @ApiParam({
+        name: 'id',
+        type: String,
+        description: 'UUID of the Post',
+    })
+    @UseGuards(AuthGuard)
+    @Delete(':id')
+    async deletePost(@Param() id: {id:string}){
+        return this.postService.deletePost(id)
+    }
+
 }
